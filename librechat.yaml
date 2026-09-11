@@ -1,5 +1,7 @@
 version: 1.3.15
 cache: true
+
+# Your Cross-Chat Memory Settings
 memory:
   disabled: false
   personalize: true
@@ -11,3 +13,20 @@ memory:
     model: "gpt-4o-mini"
     instructions: |
       Store information only related to user preferences, important facts, and ongoing tasks.
+
+# OpenRouter Custom Endpoint Settings
+endpoints:
+  custom:
+    - name: "OpenRouter"
+      apiKey: "${OPENROUTER_KEY}"
+      baseURL: "https://openrouter.ai/api/v1"
+      models:
+        default: 
+          - "anthropic/claude-3.5-sonnet"
+          - "openai/gpt-4o"
+          - "meta-llama/llama-3-70b-instruct"
+        fetch: true
+      titleConvo: true
+      titleModel: "anthropic/claude-3.5-sonnet"
+      dropParams: ["stop"]
+      modelDisplayLabel: "OpenRouter"
