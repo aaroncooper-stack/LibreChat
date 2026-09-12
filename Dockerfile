@@ -84,44 +84,11 @@ ENV BUILD_DATE=${BUILD_DATE}
 EXPOSE 3080
 ENV HOST=0.0.0.0
 
-# Write the config file cleanly on boot, then start the backend
-CMD cat << 'EOF' > /tmp/librechat.yaml
-version: 1.3.15
-cache: true
-memory:
-  disabled: false
-  personalize: true
-  tokenLimit: 2000
-  maxInputTokens: 12000
-  agent:
-    enabled: true
-    provider: "openai"
-    model: "gpt-4o-mini"
-    instructions: |
-      Store information only related to user preferences, important facts, and ongoing tasks.
-endpoints:
-  custom:
-    - name: "OpenRouter"
-      apiKey: "${OPENROUTER_KEY}"
-      baseURL: "https://openrouter.ai/api/v1"
-      models:
-        default: 
-          - "meta-llama/llama-3.3-70b-instruct"
-          - "deepseek/deepseek-chat"
-        fetch: true
-      titleConvo: true
-      titleModel: "meta-llama/llama-3.3-70b-instruct"
-      dropParams: ["stop"]
-      modelDisplayLabel: "OpenRouter"
-EOF
-npm run backend
+# Copy the repository-root config file into the container app directory
+COPY librechat.yaml /app/librechat.yaml
 
+CMD ["npm", "run", "backend"]
 
-
-#EXPOSE 3080
-#ENV HOST=0.0.0.0
-#COPY librechat.yaml /app/librechat.yaml
-#CMD ["npm", "run", "backend"]#
 
 # Optional: for client with nginx routing
 # FROM nginx:stable-alpine AS nginx-client
