@@ -77,7 +77,7 @@ EXPOSE 3080
 ENV HOST=0.0.0.0
 
 # Copy the yaml from the repo root to the app directory at runtime, then start backend
-CMD cp librechat.yaml /app/librechat.yaml && npm run backend
+CMD echo -e "version: '1.2'\ncache: true\nendpoints:\n  - name: openrouter\n    apiKey: '${OPENROUTER_KEY}'\n    models:\n      default:\n        - 'meta-llama/llama-3.3-70b-instruct'\n        - 'deepseek/deepseek-chat'" > /tmp/librechat.yaml && npm run backend
 
 #EXPOSE 3080
 #ENV HOST=0.0.0.0
