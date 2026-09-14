@@ -33,8 +33,7 @@ COPY --chown=node:node packages/data-provider/package.json ./packages/data-provi
 COPY --chown=node:node packages/data-schemas/package.json ./packages/data-schemas/package.json
 COPY --chown=node:node packages/api/package.json ./packages/api/package.json
 
-# Generate the config file so it cannot be missed or ignored by Git
-RUN printf "version: 1.3.15\ncache: true\nmemory:\n  disabled: false\n  personalize: true\n  tokenLimit: 2000\n  maxInputTokens: 12000\n  agent:\n    enabled: true\n    provider: \"openai\"\n    model: \"gpt-4o-mini\"\n    instructions: |\n      Store information only related to user preferences, important facts, and ongoing tasks.\nendpoints:\n  custom:\n    - name: \"OpenRouter\"\n      apiKey: \"\${OPENROUTER_KEY}\"\n      baseURL: \"https://openrouter.ai/api/v1\"\n      models:\n        default: \n          - \"meta-llama/llama-3.3-70b-instruct\"\n          - \"deepseek/deepseek-chat\"\n        fetch: true\n      titleConvo: true\n      titleModel: \"meta-llama/llama-3.3-70b-instruct\"\n      dropParams: [\"stop\"]\n      modelDisplayLabel: \"OpenRouter\"\n" > /app/librechat.yaml
+
 
 RUN \
     # Allow mounting of these files, which have no default
@@ -59,11 +58,15 @@ RUN \
 
 COPY --chown=node:node . .
 
+# Generate the config file so it cannot be missed or ignored by Git
+RUN printf "version: 1.3.15\ncache: true\nmemory:\n  disabled: false\n  personalize: true\n  tokenLimit: 2000\n  maxInputTokens: 12000\n  agent:\n    enabled: true\n    provider: \"openai\"\n    model: \"gpt-4o-mini\"\n    instructions: |\n      Store information only related to user preferences, important facts, and ongoing tasks.\nendpoints:\n  custom:\n    - name: \"OpenRouter\"\n      apiKey: \"\${OPENROUTER_KEY}\"\n      baseURL: \"https://openrouter.ai/api/v1\"\n      models:\n        default: \n          - \"meta-llama/llama-3.3-70b-instruct\"\n          - \"deepseek/deepseek-chat\"\n        fetch: true\n      titleConvo: true\n      titleModel: \"meta-llama/llama-3.3-70b-instruct\"\n      dropParams: [\"stop\"]\n      modelDisplayLabel: \"OpenRouter\"\n" > /app/librechat.yaml
+
 RUN \
     # React client build with configurable memory
     NODE_OPTIONS="--max-old-space-size=${NODE_MAX_OLD_SPACE_SIZE}" npm run frontend; \
     npm prune --production; \
     npm cache clean --force
+
 
 # Optional build metadata surfaced in Settings -> About for support triage.
 # Declared here (after the heavy install/build steps) so that commit/date
