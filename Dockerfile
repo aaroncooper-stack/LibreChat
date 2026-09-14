@@ -92,9 +92,8 @@ EXPOSE 3080
 ENV HOST=0.0.0.0
 
 # Generate the config file during build with proper permissions
-RUN printf "version: 1.3.16\ncache: true\nmemory:\n  disabled: false\n  personalize: true\n  tokenLimit: 2000\n  maxInputTokens: 12000\n  agent:\n    enabled: true\n    provider: \"openai\"\n    model: \"gpt-4o-mini\"\n    instructions: |\n      Store information only related to user preferences, important facts, and ongoing tasks.\nendpoints:\n  custom:\n    - name: \"OpenRouter\"\n      apiKey: \"\${OPENROUTER_KEY}\"\n      baseURL: \"https://openrouter.ai/api/v1\"\n      models:\n        default: \n          - \"meta-llama/llama-3.3-70b-instruct\"\n          - \"deepseek/deepseek-chat\"\n        fetch: true\n      titleConvo: true\n      titleModel: \"meta-llama/llama-3.3-70b-instruct\"\n      dropParams: [\"stop\"]\n      modelDisplayLabel: \"OpenRouter\"\n" > /app/librechat.yaml
+CMD printf "version: 1.3.16\ncache: true\nmemory:\n  disabled: false\n  personalize: true\n  tokenLimit: 2000\n  maxInputTokens: 12000\n  agent:\n    enabled: true\n    provider: \"openai\"\n    model: \"gpt-4o-mini\"\n    instructions: |\n      Store information only related to user preferences, important facts, and ongoing tasks.\nendpoints:\n  custom:\n    - name: \"OpenRouter\"\n      apiKey: \"\${OPENROUTER_KEY}\"\n      baseURL: \"https://openrouter.ai/api/v1\"\n      models:\n        default: \n          - \"meta-llama/llama-3.3-70b-instruct\"\n          - \"deepseek/deepseek-chat\"\n        fetch: true\n      titleConvo: true\n      titleModel: \"meta-llama/llama-3.3-70b-instruct\"\n      dropParams: [\"stop\"]\n      modelDisplayLabel: \"OpenRouter\"\n" > /app/librechat.yaml && cp /app/librechat.yaml /app/api/librechat.yaml && npm run backend
 
-CMD ["npm", "run", "backend"]
 
 
 #NB Generate the config file dynamically at runtime to bypass image copy restrictions
