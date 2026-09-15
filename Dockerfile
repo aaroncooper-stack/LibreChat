@@ -21,12 +21,16 @@ ARG NODE_MAX_OLD_SPACE_SIZE=6144
 ARG NPM_CI_TIMEOUT_SECONDS=1500
 ARG NPM_CI_ATTEMPTS=2
 
+#RUN mkdir -p /app && chown node:node /app
+#WORKDIR /app
+
 RUN mkdir -p /app && chown node:node /app
 WORKDIR /app
 
-COPY librechat.yaml
-
 USER node
+
+# Copy configuration file explicitly with correct permissions
+COPY --chown=node:node librechat.yaml ./
 
 COPY --chown=node:node package.json package-lock.json ./
 COPY --chown=node:node api/package.json ./api/package.json
