@@ -1,5 +1,3 @@
-Here is the Dockerfile
-
 # v0.8.8-rc2
 
 # Base node image
