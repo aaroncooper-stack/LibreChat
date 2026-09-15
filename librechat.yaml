@@ -9,13 +9,14 @@ endpoints:
       models:
         default:
           - "deepseek/deepseek-chat"
-          - "anthropic/claude-3.5-sonnet"
-          - "openai/gpt-4o"
+          - "openai/gpt-5.6-luna"
+          - "anthropic/claude-haiku-4.5"
+          - "meta-llama/llama-3.3-70b-instruct"
         fetch: true
       titleConvo: true
-      titleModel: "openai/gpt-4o"
+      titleModel: "openai/gpt-5.6-luna"
       summarize: false
-      summaryModel: "openai/gpt-4o"
+      summaryModel: "openai/gpt-5.6-luna"
       forcePrompt: false
       dropParams: ["stop"]
-      modelDisplayLabel: "OpenRouter"
+      modelDisplayLabel: "OpenRouter (Best Value)"
