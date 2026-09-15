@@ -29,8 +29,6 @@ WORKDIR /app
 
 USER node
 
-# Copy configuration file explicitly with correct permissions
-COPY --chown=node:node librechat.yaml ./
 
 COPY --chown=node:node package.json package-lock.json ./
 COPY --chown=node:node api/package.json ./api/package.json
@@ -64,6 +62,8 @@ RUN \
     done
 
 COPY --chown=node:node . .
+# Copy configuration file explicitly with correct permissions
+COPY --chown=node:node librechat.yaml ./
 
 # Generate the config file so it cannot be missed or ignored by Git
 
