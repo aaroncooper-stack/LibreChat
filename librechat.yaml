@@ -17,7 +17,7 @@ memory:
 
 endpoints:
   custom:
-    - name: "OpenRouter"
+    - name: "openrouter"
       apiKey: "${OPENROUTER_KEY}"
       baseURL: "https://openrouter.ai/api/v1"
       models:
