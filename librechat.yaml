@@ -5,7 +5,7 @@ memory:
   disabled: false
   agent:
     enabled: true
-    provider: "custom"
+    provider: "openrouter"
     model: "deepseek/deepseek-chat"
     maxInputTokens: 4000
     instructions: |
