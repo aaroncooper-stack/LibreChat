@@ -1,6 +1,20 @@
 version: 1.3.16
 cache: true
 
+memory:
+  disabled: false
+  agent:
+    enabled: true
+    provider: "custom"
+    model: "deepseek/deepseek-chat"
+    maxInputTokens: 4000
+    instructions: |
+      Store user preferences, technical setups, and important project facts as key/value pairs. Keep entries concise and update them when information changes.
+    validKeys:
+      - "coding_preferences"
+      - "project_details"
+      - "user_preferences"
+
 endpoints:
   custom:
     - name: "OpenRouter"
@@ -12,6 +26,7 @@ endpoints:
           - "openai/gpt-5.6-luna"
           - "anthropic/claude-haiku-4.5"
           - "meta-llama/llama-3.3-70b-instruct"
+          - "openrouter/free" # OpenRouter's general free tier auto-router
         fetch: false
       titleConvo: true
       titleModel: "openai/gpt-5.6-luna"
