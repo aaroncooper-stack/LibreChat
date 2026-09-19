@@ -15,13 +15,18 @@ memory:
       - "project_details"
       - "user_preferences"
 
-# Tavily Search settings (placed before endpoints)
-searchProvider: "tavily"
-tavilySearchOptions:
-  searchDepth: "advanced"
-  maxResults: 8
-  includeAnswer: true
-  topic: "general"
+
+webSearch:
+  searchProvider: "tavily"
+  scraperProvider: "tavily"
+  tavilyApiKey: "${TAVILY_API_KEY}"
+  tavilySearchOptions:
+    searchDepth: "advanced"
+    maxResults: 5
+    topic: "general"
+  tavilyScraperOptions:
+    extractDepth: "basic"
+
 
 endpoints:
   custom:
