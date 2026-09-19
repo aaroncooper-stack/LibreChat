@@ -15,6 +15,14 @@ memory:
       - "project_details"
       - "user_preferences"
 
+# Tavily Search settings (placed before endpoints)
+searchProvider: "tavily"
+tavilySearchOptions:
+  searchDepth: "advanced"
+  maxResults: 8
+  includeAnswer: true
+  topic: "general"
+
 endpoints:
   custom:
     - name: "openrouter"
