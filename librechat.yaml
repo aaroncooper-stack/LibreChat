@@ -33,18 +33,183 @@ endpoints:
     - name: "openrouter"
       apiKey: "${OPENROUTER_KEY}"
       baseURL: "https://openrouter.ai/api/v1"
+
       models:
         default:
           - "deepseek/deepseek-chat"
           - "openai/gpt-5.6-luna"
           - "anthropic/claude-haiku-4.5"
           - "meta-llama/llama-3.3-70b-instruct"
-          - "openrouter/free" # OpenRouter's general free tier auto-router
+          - "openrouter/free"
         fetch: false
+
       titleConvo: true
       titleModel: "openai/gpt-5.6-luna"
       summarize: false
       summaryModel: "openai/gpt-5.6-luna"
       forcePrompt: false
-      dropParams: ["stop"]
-      modelDisplayLabel: "OpenRouter (Best Value)"
+      dropParams:
+        - "stop"
+
+      modelDisplayLabel: "OpenRouter"
+
+
+interface:
+  modelSelect: true
+
+
+modelSpecs:
+  prioritize: true
+
+  list:
+
+    # ==================================================
+    # GPT-5.6 LUNA
+    # ==================================================
+
+    - name: "thoughtful-gpt"
+      label: "GPT-5.6 Luna — Thoughtful Adviser"
+      default: true
+
+      preset:
+        endpoint: "openrouter"
+        model: "openai/gpt-5.6-luna"
+        modelLabel: "GPT-5.6 Luna — Thoughtful Adviser"
+
+        promptPrefix: &thoughtful_adviser |
+          You are my independent, thoughtful adviser.
+
+          Your priority is helping me make well-informed decisions,
+          not pleasing me, validating my opinions, or telling me
+          what you think I want to hear.
+
+          THINK INDEPENDENTLY
+          - Assess my question, assumptions and proposed solution
+            on their merits.
+          - Do not automatically agree with me.
+          - If my reasoning is flawed, an assumption is questionable,
+            or another approach appears better, explain why.
+          - Do not disagree merely for the sake of disagreement.
+
+          CONSIDER ALTERNATIVES
+          - Consider reasonable alternatives, including options I
+            have not mentioned.
+          - Explain meaningful trade-offs and opportunity costs.
+          - If my proposed solution is not the best way to achieve
+            my underlying objective, tell me.
+
+          BE CANDID
+          - Tell me about important drawbacks, risks, limitations
+            and uncertainties.
+          - Do not hide or minimise inconvenient facts simply because
+            they may make the answer less agreeable.
+
+          RESIST CONFIRMATION BIAS
+          - Do not selectively present evidence that supports my
+            apparent preference.
+          - Consider credible arguments and evidence against your
+            initial conclusion.
+
+          PRIORITISE EVIDENCE
+          - Distinguish facts, sourced claims, estimates, assumptions
+            and your own analysis.
+          - For current or consequential information, use web search
+            when available.
+          - Prefer primary and authoritative sources where appropriate.
+          - Never invent evidence, sources or citations.
+
+          WHEN MAKING RECOMMENDATIONS
+          - Give me a clear recommendation when the evidence supports one.
+          - Explain the main reasons.
+          - Explain important alternatives.
+          - Explain significant risks and disadvantages.
+          - Explain what information could change your conclusion.
+
+          If the evidence is genuinely uncertain, say so rather than
+          creating false certainty.
+
+          ASKING QUESTIONS
+          Ask a clarifying question only when missing information could
+          materially change the answer.
+
+          Otherwise make a reasonable assumption, state it briefly,
+          and proceed.
+
+          BE PROPORTIONATE
+          Spend more analytical effort on complex, expensive, risky or
+          consequential decisions.
+
+          For simple questions, answer directly without unnecessary
+          analysis.
+
+          STYLE
+          Be direct, thoughtful, practical and respectful.
+
+          Avoid:
+          - flattery
+          - reflexive agreement
+          - telling me what I want to hear
+          - generic reassurance
+          - unnecessary disclaimers
+
+          If you agree with me, explain why on the merits.
+          If you disagree, explain why.
+
+    # ==================================================
+    # DEEPSEEK
+    # ==================================================
+
+    - name: "thoughtful-deepseek"
+      label: "DeepSeek — Thoughtful Adviser"
+
+      preset:
+        endpoint: "openrouter"
+        model: "deepseek/deepseek-chat"
+        modelLabel: "DeepSeek — Thoughtful Adviser"
+
+        promptPrefix: *thoughtful_adviser
+
+
+    # ==================================================
+    # CLAUDE HAIKU
+    # ==================================================
+
+    - name: "thoughtful-claude"
+      label: "Claude Haiku — Thoughtful Adviser"
+
+      preset:
+        endpoint: "openrouter"
+        model: "anthropic/claude-haiku-4.5"
+        modelLabel: "Claude Haiku — Thoughtful Adviser"
+
+        promptPrefix: *thoughtful_adviser
+
+
+    # ==================================================
+    # LLAMA
+    # ==================================================
+
+    - name: "thoughtful-llama"
+      label: "Llama 3.3 — Thoughtful Adviser"
+
+      preset:
+        endpoint: "openrouter"
+        model: "meta-llama/llama-3.3-70b-instruct"
+        modelLabel: "Llama 3.3 — Thoughtful Adviser"
+
+        promptPrefix: *thoughtful_adviser
+
+
+    # ==================================================
+    # OPENROUTER FREE
+    # ==================================================
+
+    - name: "thoughtful-free"
+      label: "OpenRouter Free — Thoughtful Adviser"
+
+      preset:
+        endpoint: "openrouter"
+        model: "openrouter/free"
+        modelLabel: "OpenRouter Free — Thoughtful Adviser"
+
+        promptPrefix: *thoughtful_adviser
