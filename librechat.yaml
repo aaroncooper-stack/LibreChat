@@ -1,6 +1,52 @@
 version: 1.3.15
 cache: true
 
+
+# ============================================================
+# SHARED "THOUGHTFUL ADVISER" INSTRUCTIONS
+# ============================================================
+
+thoughtful_adviser: &thoughtful_adviser |
+  You are my independent, thoughtful adviser.
+
+  Your priority is helping me make well-informed decisions, not pleasing me,
+  validating my opinions, or telling me what you think I want to hear.
+
+  - Assess my question, assumptions, and proposed solution on their merits.
+    Do not automatically agree with me.
+  - If my reasoning is flawed, questionable, incomplete, or based on a weak
+    assumption, explain why clearly. Do not disagree merely for the sake of it.
+  - Consider reasonable alternatives, including options I have not mentioned.
+    Explain important trade-offs, opportunity costs, and practical implications.
+  - Be candid about drawbacks, risks, limitations, uncertainty, and situations
+    where the evidence is weak or mixed.
+  - Actively guard against confirmation bias. Consider credible arguments and
+    evidence that could support a different conclusion from my initial view.
+  - Prioritize evidence. Distinguish between established facts, sourced claims,
+    estimates, assumptions, and your own analysis.
+  - For current, changing, expensive, consequential, or fact-sensitive questions,
+    use web search when available. Prefer primary and authoritative sources.
+    Never invent evidence, sources, citations, prices, specifications, or facts.
+  - When I ask what I should do, give me a clear recommendation when the
+    evidence supports one. Explain the reasoning, the main alternatives,
+    disadvantages, risks, and what information could change the conclusion.
+  - Focus on my underlying objective rather than simply accepting the solution
+    I initially propose.
+  - Ask a clarifying question only when missing information would materially
+    change the answer. Otherwise make reasonable assumptions and proceed.
+  - Match the amount of analysis to the problem. Be more analytical for
+    complex, expensive, risky, or consequential decisions and more direct for
+    simple questions.
+  - Be direct, thoughtful, practical, and respectful.
+  - Avoid flattery, reflexive agreement, generic reassurance, and unnecessary
+    disclaimers.
+  - If you agree with me, explain why. If you disagree, explain why.
+
+
+# ============================================================
+# MEMORY
+# ============================================================
+
 memory:
   disabled: false
   agent:
@@ -9,35 +55,49 @@ memory:
     model: "deepseek/deepseek-chat"
     maxInputTokens: 4000
     instructions: |
-      Store user preferences, technical setups, and important project facts as key/value pairs. Keep entries concise and update them when information changes.
+      Store user preferences, technical setups, and important project facts as key/value pairs.
+      Keep entries concise and update them when information changes.
     validKeys:
       - "coding_preferences"
       - "project_details"
       - "user_preferences"
 
 
+# ============================================================
+# WEB SEARCH
+# ============================================================
+
 webSearch:
   searchProvider: "tavily"
   scraperProvider: "tavily"
   tavilyApiKey: "${TAVILY_API_KEY}"
+
   tavilySearchOptions:
     searchDepth: "advanced"
     maxResults: 5
     topic: "general"
+
   tavilyScraperOptions:
     extractDepth: "basic"
 
 
+# ============================================================
+# OPENROUTER
+# ============================================================
+
 endpoints:
   custom:
+
     - name: "openrouter"
+
       apiKey: "${OPENROUTER_KEY}"
       baseURL: "https://openrouter.ai/api/v1"
 
       models:
         default:
-          - "deepseek/deepseek-chat"
+          - "openai/gpt-5.6-luna-pro"
           - "openai/gpt-5.6-luna"
+          - "deepseek/deepseek-chat"
           - "anthropic/claude-haiku-4.5"
           - "meta-llama/llama-3.3-70b-instruct"
           - "openrouter/free"
@@ -45,167 +105,128 @@ endpoints:
 
       titleConvo: true
       titleModel: "openai/gpt-5.6-luna"
+
       summarize: false
       summaryModel: "openai/gpt-5.6-luna"
+
       forcePrompt: false
+
       dropParams:
         - "stop"
 
       modelDisplayLabel: "OpenRouter"
 
+      customParams:
+        reasoningFormat: "reasoning_object"
 
-interface:
-  modelSelect: true
 
+# ============================================================
+# MODEL SPECS
+# ============================================================
 
 modelSpecs:
+
+  # Keep the normal model selector available.
+  enforce: false
   prioritize: true
 
   list:
 
-    # ==================================================
-    # GPT-5.6 LUNA
-    # ==================================================
+    # --------------------------------------------------------
+    # DEFAULT — GPT-5.6 LUNA PRO
+    # --------------------------------------------------------
 
     - name: "thoughtful-gpt"
-      label: "GPT-5.6 Luna — Thoughtful Adviser"
+      label: "GPT-5.6 Luna Pro"
       default: true
 
+      preset:
+        endpoint: "openrouter"
+        model: "openai/gpt-5.6-luna-pro"
+        modelLabel: "GPT-5.6 Luna Pro — Thoughtful Adviser"
+
+        # GPT-5.6 reasoning configuration
+        reasoning_effort: "high"
+        reasoning_mode: "pro"
+        reasoning_context: "all_turns"
+        reasoning_summary: "concise"
+        useResponsesApi: true
+
+        # Shared adviser behaviour
+        promptPrefix: *thoughtful_adviser
+
+
+    # --------------------------------------------------------
+    # GPT-5.6 LUNA STANDARD
+    # --------------------------------------------------------
+
+    - name: "thoughtful-luna"
+      label: "GPT-5.6 Luna"
+      
       preset:
         endpoint: "openrouter"
         model: "openai/gpt-5.6-luna"
         modelLabel: "GPT-5.6 Luna — Thoughtful Adviser"
 
-        promptPrefix: &thoughtful_adviser |
-          You are my independent, thoughtful adviser.
+        reasoning_effort: "high"
+        reasoning_context: "all_turns"
+        reasoning_summary: "concise"
+        useResponsesApi: true
 
-          Your priority is helping me make well-informed decisions,
-          not pleasing me, validating my opinions, or telling me
-          what you think I want to hear.
+        promptPrefix: *thoughtful_adviser
 
-          THINK INDEPENDENTLY
-          - Assess my question, assumptions and proposed solution
-            on their merits.
-          - Do not automatically agree with me.
-          - If my reasoning is flawed, an assumption is questionable,
-            or another approach appears better, explain why.
-          - Do not disagree merely for the sake of disagreement.
 
-          CONSIDER ALTERNATIVES
-          - Consider reasonable alternatives, including options I
-            have not mentioned.
-          - Explain meaningful trade-offs and opportunity costs.
-          - If my proposed solution is not the best way to achieve
-            my underlying objective, tell me.
-
-          BE CANDID
-          - Tell me about important drawbacks, risks, limitations
-            and uncertainties.
-          - Do not hide or minimise inconvenient facts simply because
-            they may make the answer less agreeable.
-
-          RESIST CONFIRMATION BIAS
-          - Do not selectively present evidence that supports my
-            apparent preference.
-          - Consider credible arguments and evidence against your
-            initial conclusion.
-
-          PRIORITISE EVIDENCE
-          - Distinguish facts, sourced claims, estimates, assumptions
-            and your own analysis.
-          - For current or consequential information, use web search
-            when available.
-          - Prefer primary and authoritative sources where appropriate.
-          - Never invent evidence, sources or citations.
-
-          WHEN MAKING RECOMMENDATIONS
-          - Give me a clear recommendation when the evidence supports one.
-          - Explain the main reasons.
-          - Explain important alternatives.
-          - Explain significant risks and disadvantages.
-          - Explain what information could change your conclusion.
-
-          If the evidence is genuinely uncertain, say so rather than
-          creating false certainty.
-
-          ASKING QUESTIONS
-          Ask a clarifying question only when missing information could
-          materially change the answer.
-
-          Otherwise make a reasonable assumption, state it briefly,
-          and proceed.
-
-          BE PROPORTIONATE
-          Spend more analytical effort on complex, expensive, risky or
-          consequential decisions.
-
-          For simple questions, answer directly without unnecessary
-          analysis.
-
-          STYLE
-          Be direct, thoughtful, practical and respectful.
-
-          Avoid:
-          - flattery
-          - reflexive agreement
-          - telling me what I want to hear
-          - generic reassurance
-          - unnecessary disclaimers
-
-          If you agree with me, explain why on the merits.
-          If you disagree, explain why.
-
-    # ==================================================
+    # --------------------------------------------------------
     # DEEPSEEK
-    # ==================================================
+    # --------------------------------------------------------
 
     - name: "thoughtful-deepseek"
-      label: "DeepSeek — Thoughtful Adviser"
+      label: "DeepSeek Chat"
 
       preset:
         endpoint: "openrouter"
         model: "deepseek/deepseek-chat"
-        modelLabel: "DeepSeek — Thoughtful Adviser"
+        modelLabel: "DeepSeek Chat — Thoughtful Adviser"
 
         promptPrefix: *thoughtful_adviser
 
 
-    # ==================================================
+    # --------------------------------------------------------
     # CLAUDE HAIKU
-    # ==================================================
+    # --------------------------------------------------------
 
     - name: "thoughtful-claude"
-      label: "Claude Haiku — Thoughtful Adviser"
+      label: "Claude Haiku 4.5"
 
       preset:
         endpoint: "openrouter"
         model: "anthropic/claude-haiku-4.5"
-        modelLabel: "Claude Haiku — Thoughtful Adviser"
+        modelLabel: "Claude Haiku 4.5 — Thoughtful Adviser"
 
         promptPrefix: *thoughtful_adviser
 
 
-    # ==================================================
+    # --------------------------------------------------------
     # LLAMA
-    # ==================================================
+    # --------------------------------------------------------
 
     - name: "thoughtful-llama"
-      label: "Llama 3.3 — Thoughtful Adviser"
+      label: "Llama 3.3 70B"
 
       preset:
         endpoint: "openrouter"
         model: "meta-llama/llama-3.3-70b-instruct"
-        modelLabel: "Llama 3.3 — Thoughtful Adviser"
+        modelLabel: "Llama 3.3 70B — Thoughtful Adviser"
 
         promptPrefix: *thoughtful_adviser
 
 
-    # ==================================================
+    # --------------------------------------------------------
     # OPENROUTER FREE
-    # ==================================================
+    # --------------------------------------------------------
 
     - name: "thoughtful-free"
-      label: "OpenRouter Free — Thoughtful Adviser"
+      label: "OpenRouter Free"
 
       preset:
         endpoint: "openrouter"
@@ -213,3 +234,11 @@ modelSpecs:
         modelLabel: "OpenRouter Free — Thoughtful Adviser"
 
         promptPrefix: *thoughtful_adviser
+
+
+# ============================================================
+# INTERFACE
+# ============================================================
+
+interface:
+  modelSelect: true
